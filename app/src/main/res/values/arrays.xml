@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="cat_images">
+        <item>@drawable/cutecat001</item>
+        <item>@drawable/cutecat002</item>
+        <item>@drawable/cutecat003</item>
+        <item>@drawable/cutecat004</item>
+        <item>@drawable/cutecat005</item>
+        <item>@drawable/cutecat006</item>
+    </array>
+</resources>
