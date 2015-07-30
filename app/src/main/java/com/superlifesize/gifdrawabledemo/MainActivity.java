@@ -7,8 +7,6 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -111,15 +109,6 @@ public class MainActivity extends ActionBarActivity {
         //URL Format: http://api.giphy.com/v1/gifs/search?q=cute+cat&api_key=dc6zaTOxFJmzC&limit=1&offset=0
         //Random Search URL: http://api.giphy.com/v1/gifs/random?api_key=dc6zaTOxFJmzC&tag=cute+funny+cat+kitten
         String apiKey = "dc6zaTOxFJmzC"; //Giphy's Public API Key
-//        String limit = "50";
-//        String giphyUrl =
-//                "http://api.giphy.com/v1/gifs/search?q=" +
-//                "cute+funny+cat+kitten" +
-//                "&api_key=" +
-//                apiKey +
-//                "&limit=" +
-//                limit +
-//                "&offset=0"; //possibly add Search Term variable
 
         String giphyUrl =
                 "http://api.giphy.com/v1/gifs/random" +
@@ -195,26 +184,4 @@ public class MainActivity extends ActionBarActivity {
         return isAvailable;
     }
 
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
 }
