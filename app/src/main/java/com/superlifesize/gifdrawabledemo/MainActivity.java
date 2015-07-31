@@ -33,9 +33,9 @@ public class MainActivity extends ActionBarActivity {
 
     public static final String TAG = MainActivity.class.getSimpleName();
 
-    private GiphyGifData mGiphyGifData;
+    private GiphyGifData giphyGifData;
     private ImageView imageView;
-    private pl.droidsonroids.gif.GifImageView mGifImageView;
+    private pl.droidsonroids.gif.GifImageView gifImageView;
     private Button refresh_button;
 
     @Override
@@ -44,7 +44,7 @@ public class MainActivity extends ActionBarActivity {
         setContentView(R.layout.activity_main);
 
         imageView = (ImageView) findViewById(R.id.glide_gif);
-        mGifImageView = (pl.droidsonroids.gif.GifImageView) findViewById(R.id.gif_drawable);
+        gifImageView = (pl.droidsonroids.gif.GifImageView) findViewById(R.id.gif_drawable);
         refresh_button = (Button) findViewById(R.id.refresh_button);
         refresh_button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -72,7 +72,7 @@ public class MainActivity extends ActionBarActivity {
         Log.i(TAG, "Random Image: " + randImage);
 
         int image = images.getResourceId(randImage, R.drawable.cutecat001);
-        mGifImageView.setImageResource(image);
+        gifImageView.setImageResource(image);
         images.recycle();
     }
 
@@ -88,7 +88,7 @@ public class MainActivity extends ActionBarActivity {
     }
 
     private void updateDisplay() {
-        String gifUrl = mGiphyGifData.getUrl();
+        String gifUrl = giphyGifData.getUrl();
         Log.i(TAG, "updateDisplay GIF URL: " + gifUrl);
 
         Glide.with(MainActivity.this)
@@ -148,8 +148,8 @@ public class MainActivity extends ActionBarActivity {
                     try {
                         String jsonData = response.body().string();
                         if (response.isSuccessful()) {
-                            mGiphyGifData = getGif(jsonData);
-                            Log.v(TAG, "Giphy Gif Data from Response: " + mGiphyGifData);
+                            giphyGifData = getGif(jsonData);
+                            Log.v(TAG, "Giphy Gif Data from Response: " + giphyGifData);
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
