@@ -23,6 +23,7 @@ import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -33,7 +34,8 @@ public class MainActivity extends ActionBarActivity {
 
     public static final String TAG = MainActivity.class.getSimpleName();
 
-    private GiphyGifData giphyGifData;
+    private Giphy giphy;
+    private GiphyTrendingData giphyTrendingData;
     private ImageView imageView;
     private pl.droidsonroids.gif.GifImageView gifImageView;
     private Button refresh_button;
@@ -76,20 +78,42 @@ public class MainActivity extends ActionBarActivity {
         images.recycle();
     }
 
-    private GiphyGifData getGif(String jsonData) throws JSONException {
+    private Giphy parseTrendingData(String jsonData)throws JSONException {
+        Giphy giphy = new Giphy();
+
+        giphy.setGiphyTrendingData(getGif(jsonData));
+
+        return giphy;
+    }
+
+    private GiphyTrendingData[] getGif(String jsonData) throws JSONException {
         JSONObject giphy = new JSONObject(jsonData);
-        JSONObject data = giphy.getJSONObject("data");
+        JSONArray data = giphy.getJSONArray("data");
 
-        GiphyGifData gif = new GiphyGifData();
-        gif.setUrl(data.getString("image_url"));
-        Log.i(TAG, "Gif JSON Data - GIF URL: " + gif);
+        final int NUM_OF_GIFS = data.length();
+        GiphyTrendingData[] gifs = new GiphyTrendingData[NUM_OF_GIFS];
 
-        return gif;
+        for(int i = 0; i < NUM_OF_GIFS; i++) {
+            JSONObject trendingGif = data.getJSONObject(i);
+            GiphyTrendingData gif = new GiphyTrendingData();
+
+            JSONObject images = trendingGif.getJSONObject("images");
+            JSONObject original = images.getJSONObject("original");
+
+            gif.setUrl(original.getString("url"));
+
+            gifs[i] = gif;
+        }
+
+        return gifs;
     }
 
     private void updateDisplay() {
-        String gifUrl = giphyGifData.getUrl();
-        Log.i(TAG, "updateDisplay GIF URL: " + gifUrl);
+        GiphyTrendingData[] gifs = giphy.getGiphyTrendingData();
+        int randImage = (int) (Math.random() * gifs.length);
+        GiphyTrendingData gif = gifs[randImage];
+        String gifUrl = gif.getUrl();
+        Log.d(TAG, "from update URL: " + gifUrl);
 
         Glide.with(MainActivity.this)
                 .load(gifUrl)
@@ -108,15 +132,13 @@ public class MainActivity extends ActionBarActivity {
     private void getGiphy () {
         //URL Format: http://api.giphy.com/v1/gifs/search?q=cute+cat&api_key=dc6zaTOxFJmzC&limit=1&offset=0
         //Random Search URL: http://api.giphy.com/v1/gifs/random?api_key=dc6zaTOxFJmzC&tag=cute+funny+cat+kitten
+        //Trending Search URL: http://api.giphy.com/v1/gifs/trending?api_key=dc6zaTOxFJmzC
         String apiKey = "dc6zaTOxFJmzC"; //Giphy's Public API Key
 
         String giphyUrl =
-                "http://api.giphy.com/v1/gifs/random" +
+                "http://api.giphy.com/v1/gifs/trending" +
                         "?api_key=" +
-                        apiKey +
-                        "&tag=" +
-                        "cat";
-
+                        apiKey;
 
         if (isNetworkAvailable()) {
 
@@ -148,8 +170,8 @@ public class MainActivity extends ActionBarActivity {
                     try {
                         String jsonData = response.body().string();
                         if (response.isSuccessful()) {
-                            giphyGifData = getGif(jsonData);
-                            Log.v(TAG, "Giphy Gif Data from Response: " + giphyGifData);
+                            giphy = parseTrendingData(jsonData);
+                            Log.v(TAG, "Giphy Gif Data from Response: " + giphy);
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {

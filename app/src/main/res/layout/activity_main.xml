@@ -28,7 +28,8 @@
             android:layout_width="200dp"
             android:layout_height="200dp"
             android:layout_below="@id/textView"
-            android:layout_centerHorizontal="true"/>
+            android:layout_centerHorizontal="true"
+            android:scaleType="centerCrop"/>
 
         <TextView
             android:id="@+id/textView2"
